@@ -1,0 +1,87 @@
+# Pekko Configuration Template
+# Copy this to application.conf and customize
+
+pekko {
+  loglevel = "INFO"
+  
+  actor {
+    provider = cluster
+    
+    serialization-bindings {
+      "io.t2r2.YourSerializable" = jackson-json
+    }
+  }
+  
+  cluster {
+    seed-nodes = [
+      "pekko://t2r2@127.0.0.1:2551"
+    ]
+    
+    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
+  }
+  
+  persistence {
+    journal.plugin = "jdbc-journal"
+    snapshot-store.plugin = "jdbc-snapshot-store"
+  }
+  
+  http {
+    server {
+      preview.enable-http2 = on
+    }
+  }
+}
+
+# JDBC configuration
+jdbc-journal {
+  slick = \${slick}
+}
+
+jdbc-snapshot-store {
+  slick = \${slick}
+}
+
+slick {
+  profile = "slick.jdbc.PostgresProfile$"
+  db {
+    host = "localhost"
+    port = 5432
+    name = "appdb"
+    user = "user"
+    password = "password"
+    driver = "org.postgresql.Driver"
+    numThreads = 5
+    maxConnections = 5
+    minConnections = 1
+  }
+}
+
+# Neo4j configuration (for DAG/lineage graph)
+neo4j {
+  uri = "bolt://localhost:7687"
+  username = "neo4j"
+  password = "password123"
+  
+  connection {
+    max-pool-size = 50
+    connection-timeout = 30s
+    max-transaction-retry-time = 30s
+  }
+}
+
+# MinIO/S3 configuration
+s3 {
+  endpoint = "http://localhost:9000"
+  access-key = "minio"
+  secret-key = "minio123"
+  bucket = "t2r2-artifacts"
+  region = "us-east-1"
+}
+
+# OpenTelemetry configuration
+otel {
+  service-name = "t2r2"
+  jaeger {
+    endpoint = "http://localhost:4317"
+  }
+}

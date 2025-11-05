@@ -1,0 +1,25 @@
+# sbt / scala
+target/
+project/target/
+project/project/
+metals.sbt
+.metals/
+.bloop/
+.idea/
+.cache/
+.vscode/.history
+
+# Java/Scala
+*.class
+*.log
+
+# OS
+.DS_Store
+
+# Node (if you later add UI)
+node_modules/
+dist/
+
+# Environment Settings 
+**/application.conf
+!**/application.conf.template
