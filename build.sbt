@@ -78,7 +78,8 @@ lazy val connectorsAndKafkaDeps = Seq(
 )
 
 lazy val protobufDeps = Seq(
-  "com.thesamet.scalapb" %% "scalapb-runtime"       % V.scalapb % "protobuf"
+  "com.thesamet.scalapb" %% "scalapb-runtime"       % V.scalapb % "protobuf",
+  "com.thesamet.scalapb" %% "scalapb-runtime-grpc"  % V.scalapb
 )
 
 lazy val configAndLoggingDeps = Seq(
@@ -137,12 +138,19 @@ lazy val core = (project in file("modules/core"))
 // ==============================
 lazy val contracts = (project in file("modules/contracts"))
   .dependsOn(core)
+  .enablePlugins(PekkoGrpcPlugin)                  
   .settings(commonSettings)
   .settings(
     name := "t2r2-contracts",
-    libraryDependencies ++= protobufDeps ++ pekkoCoreDeps ++ persistenceDeps
+    libraryDependencies ++= protobufDeps ++ pekkoCoreDeps ++ persistenceDeps ++ httpAndGrpcDeps,
+    // Configure Pekko gRPC code generation
+    pekkoGrpcGeneratedSources := Seq(PekkoGrpc.Client, PekkoGrpc.Server),
+    pekkoGrpcGeneratedLanguages := Seq(PekkoGrpc.Scala),
+    // ScalaPB configuration for this project only
+    Compile / PB.targets := Seq(
+      scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
+    )
   )
-  .enablePlugins(PekkoGrpcPlugin)
 
 // ==============================
 // :orchestrator  (cluster-sharded run + task orchestration)
@@ -188,18 +196,6 @@ lazy val gateway = (project in file("modules/gateway"))
     name := "t2r2-gateway",
     libraryDependencies ++= pekkoCoreDeps ++ httpAndGrpcDeps ++ persistenceDeps ++ otelDeps
   )
-
-// ==============================
-// Protobuf / gRPC generation settings
-// ==============================
-import org.apache.pekko.grpc.sbt.PekkoGrpcPlugin
-Compile / PB.targets := Seq(
-  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
-)
-PB.externalIncludePath := (Compile / sourceDirectory).value / "protobuf"
-
-// Recommended to keep proto sources under: modules/{core,contracts}/src/main/protobuf
-// Example: modules/contracts/src/main/protobuf/Artifact.proto
 
 // ==============================
 // Assembly settings (fat JARs for each service)

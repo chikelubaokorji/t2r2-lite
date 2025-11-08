@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package io.t2r2.contracts.v1;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+import "TaskSpec.proto";
+
+option java_multiple_files = true;
+option java_package = "io.t2r2.contracts.v1";
+
+option (scalapb.options) = {
+  flat_package: true
+  preserve_unknown_fields: false
+};
+
+// Reference to an input artifact with an optional expected hash
+// for reproducibility guarantees.
+message ArtifactRef {
+  string id = 1;
+  // When set, the run must read content matching this hash.
+  string expected_sha256 = 2;
+}
+
+// A workflow/run manifest describing tasks and declared inputs.
+message RunSpec {
+  // Run id (ULID/UUID).
+  string id = 1;
+
+  // Optional template id the run was instantiated from.
+  string template_id = 2;
+
+  // Declared inputs to the workflow (by reference).
+  repeated ArtifactRef inputs = 3;
+
+  // The tasks comprising the workflow.
+  repeated TaskSpec tasks = 4;
+
+  // Free-form labels for search and policy routing.
+  map<string, string> labels = 5;
+
+  // Submitted/created timestamp.
+  google.protobuf.Timestamp created_at = 6;
+
+  // Semantic schema version of this RunSpec.
+  string schema_version = 7;
+
+  reserved 14, 15;
+  reserved "deprecated_field";
+}

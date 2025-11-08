@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package io.t2r2.contracts.v1;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "io.t2r2.contracts.v1";
+
+option (scalapb.options) = {
+  flat_package: true
+  preserve_unknown_fields: false
+};
+
+// Status of a contract.
+enum ContractStatus {
+  CONTRACT_STATUS_UNSPECIFIED = 0;
+  CONTRACT_STATUS_PROPOSED    = 1;
+  CONTRACT_STATUS_AGREED      = 2;
+  CONTRACT_STATUS_DEPRECATED  = 3;
+}
+
+
+// A data contract binds producer/consumer to a protobuf schema.
+// The schema is referenced by URI and content hash to ensure immutability.
+message Contract {
+  string id = 1;
+
+  // Logical parties (can be service names or org identifiers).
+  string producer_id = 2;
+  string consumer_id = 3;
+
+  // Where to fetch the .proto bundle or schema doc (e.g., s3://.../schema.zip).
+  string schema_uri = 4;
+
+  // Hash of the schema bundle (sha256 hex) to guarantee exact versioning.
+  string schema_sha256 = 5;
+
+  // Semantic version string for humans.
+  string schema_version = 6;
+
+  ContractStatus status = 7;
+
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+
+  // Optional notes or rationale for changes.
+  string notes = 10;
+
+  // Extensible metadata (non-critical).
+  map<string, string> attributes = 11;
+
+  reserved 20, 21;
+  reserved "old_schema_ref";
+}
+
+
+// --- RPC Messages ---
+message ProposeContractRequest {
+  // If id is empty, server will assign one.
+  string id = 1;
+  string producer_id = 2;
+  string consumer_id = 3;
+  string schema_uri = 4;
+  string schema_sha256 = 5;
+  string schema_version = 6;
+  string notes = 7;
+  map<string, string> attributes = 8;
+}
+message ProposeContractResponse {
+  Contract contract = 1;
+}
+
+message AgreeContractRequest {
+  string contract_id = 1;
+  // Optionally record who agreed (service/user).
+  string agreed_by = 2;
+  string notes = 3;
+}
+message AgreeContractResponse {
+  Contract contract = 1;
+}
+
+message GetContractRequest {
+  string contract_id = 1;
+}
+message GetContractResponse {
+  Contract contract = 1;
+}
+
+message ListContractsRequest {
+  // Optional filters; leave empty to list all.
+  string producer_id = 1;
+  string consumer_id = 2;
+  int32 page_size = 3;     // optional; server may cap
+  string page_token = 4;   // opaque
+}
+message ListContractsResponse {
+  repeated Contract contracts = 1;
+  string next_page_token = 2;
+}
+
+
+// --- Service ---
+service ContractsService {
+  rpc ProposeContract (ProposeContractRequest) returns (ProposeContractResponse);
+  rpc AgreeContract   (AgreeContractRequest)   returns (AgreeContractResponse);
+  rpc GetContract     (GetContractRequest)     returns (GetContractResponse);
+  rpc ListContracts   (ListContractsRequest)   returns (ListContractsResponse);
+}

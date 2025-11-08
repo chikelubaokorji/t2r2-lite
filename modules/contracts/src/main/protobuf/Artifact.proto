@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package io.t2r2.contracts.v1;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "io.t2r2.contracts.v1";
+
+option (scalapb.options) = {
+  flat_package: true
+  preserve_unknown_fields: false
+};
+
+// Represents a data artifact tracked by lineage.
+// Evolution notes:
+//  - Additive only: add new fields with NEW numbers.
+//  - Do NOT change meaning of existing fields.
+//  - If a field is removed, mark its tag number as reserved.
+message Artifact {
+  // Stable unique id within the system (e.g., ULID/UUID).
+  string id = 1;
+
+  // Content location (S3/MinIO/HTTP/file). Immutable once published.
+  string uri = 2;
+
+  // IANA media type or domain type (e.g., "text/csv", "gene_expression/csv").
+  string media_type = 3;
+
+  // Semantic schema version for the artifact's logical structure.
+  string schema_version = 4;
+
+  // SHA-256 of the exact stored content (hex). Immutable.
+  string sha256 = 5;
+
+  // Optional human-oriented context.
+  string description = 6;
+
+  // Creation timestamp (UTC).
+  google.protobuf.Timestamp created_at = 7;
+
+  // Extensible metadata (non-critical).
+  map<string, string> attributes = 8;
+
+  // Reserve previously used/removed tags here.
+  reserved 15, 16;
+  reserved "legacy_checksum";
+}

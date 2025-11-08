@@ -1,0 +1,10 @@
+# Linting and Validation Configuration for .proto Files (essential for enforcing style, structure, and semantic correctness)
+version: v1
+lint:
+  use:
+    - DEFAULT
+  except:
+    - FIELD_LOWER_SNAKE_CASE # Prevents Buf from flagging camelCase field names as violations
+  ignore_only:
+    RPC_REQUEST_RESPONSE_UNIQUE: # Suppresses RPC uniqueness rule for a specific path
+      - modules/contracts/src/main/protobuf

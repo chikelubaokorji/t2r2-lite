@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package io.t2r2.contracts.v1;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_multiple_files = true;
+option java_package = "io.t2r2.contracts.v1";
+
+option (scalapb.options) = {
+  flat_package: true
+  preserve_unknown_fields: false
+};
+
+
+// Describes an executable task in a workflow.
+// Evolution rules:
+//  - Prefer adding optional fields or new repeated items.
+//  - Never repurpose existing numbers.
+message TaskSpec {
+  // Stable id for this task in a run/template.
+  string id = 1;
+
+  // Human-readable task name.
+  string name = 2;
+
+  // Immutable container image digest (e.g., "registry/img@sha256:...").
+  string image_digest = 3;
+
+  // Command to invoke inside the container (optional).
+  string command = 4;
+
+  // Arguments for the command (optional).
+  repeated string args = 5;
+
+  // Input artifact ids consumed by this task.
+  repeated string input_artifact_ids = 6;
+
+  // Output artifact ids produced by this task (declared).
+  repeated string output_artifact_ids = 7;
+
+  // Semantic schema version for the task spec.
+  string schema_version = 8;
+
+  // Arbitrary parameters/environment passed to the task.
+  map<string, string> params = 9;
+
+  // Optional created_at for provenance.
+  google.protobuf.Timestamp created_at = 10;
+
+  reserved 15;
+  reserved "docker_tag"; // do not rely on mutable tags; use digests
+}
