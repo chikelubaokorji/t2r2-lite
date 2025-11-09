@@ -61,8 +61,21 @@ jobs:
           version: '1.28.1'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Lint proto files with buf
+      - name: Setup ScalaPB protos for buf
+        run: |
+          mkdir -p modules/contracts/src/main/protobuf/scalapb
+          curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+            -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto
+
+      - name: Lint proto files with buf (Stage 1)
         run: buf lint modules/contracts/src/main/protobuf
+        run: |
+          mkdir -p .buf/scalapb
+          curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto -o .buf/scalapb/scalapb.proto
+
+      - name: Lint proto files with buf (Stage 2)
+        run: |
+          buf lint modules/contracts/src/main/protobuf --path .buf
 
       - name: Enforce Proto File Evolution Guidelines
         run: |

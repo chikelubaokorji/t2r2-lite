@@ -1,5 +1,12 @@
 # Linting and Validation Configuration for .proto Files (essential for enforcing style, structure, and semantic correctness)
 version: v1
+
+# # Declare dependencies from Buf Schema Registry
+# deps:
+#   - buf.build/googleapis/googleapis
+#   - buf.build/grpc-ecosystem/grpc-gateway
+
+# Only lint source proto files, not generated ones
 lint:
   use:
     - DEFAULT
