@@ -8,3 +8,17 @@ lint:
   ignore_only:
     RPC_REQUEST_RESPONSE_UNIQUE: # Suppresses RPC uniqueness rule for a specific path
       - modules/contracts/src/main/protobuf
+
+  # Exclude target directories and generated files
+  ignore:
+    - modules/*/target
+    - target
+    - "**/target/**"
+
+# Optional: specify module roots explicitly
+breaking:
+  use:
+    - FILE
+  ignore:
+    - modules/*/target
+    - target
