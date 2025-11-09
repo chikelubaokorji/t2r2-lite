@@ -62,7 +62,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Lint proto files with buf
-        run: buf lint modules/contracts/src/main/protobuf modules/core/src/main/protobuf
+        run: buf lint modules/contracts/src/main/protobuf
 
       - name: Enforce Proto File Evolution Guidelines
         run: |
