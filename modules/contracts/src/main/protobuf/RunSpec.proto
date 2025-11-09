@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package io.t2r2.contracts.v1;
 
-// import "scalapb/scalapb.proto";
+import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
 import "TaskSpec.proto";
 

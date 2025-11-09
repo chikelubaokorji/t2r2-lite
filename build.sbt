@@ -153,7 +153,8 @@ lazy val contracts = (project in file("modules/contracts"))
     Compile / PB.targets := Seq(
     scalapb.gen(
       flatPackage = true,
-      javaConversions = false
+      javaConversions = false,
+      preserveUnknownFields = false
     ) -> (Compile / sourceManaged).value / "scalapb"
   )
   )
