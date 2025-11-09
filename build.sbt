@@ -136,6 +136,7 @@ lazy val core = (project in file("modules/core"))
 // ==============================
 // :contracts  (protobuf schemas, contract validation)
 // ==============================
+import scalapb.GeneratorOption._
 lazy val contracts = (project in file("modules/contracts"))
   .dependsOn(core)
   .enablePlugins(PekkoGrpcPlugin)                  
@@ -151,12 +152,10 @@ lazy val contracts = (project in file("modules/contracts"))
     //  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
     //)
     Compile / PB.targets := Seq(
-    scalapb.gen(
-      flatPackage = true,
-      javaConversions = false,
-      preserveUnknownFields = false
-    ) -> (Compile / sourceManaged).value / "scalapb"
-  )
+      scalapb.gen(
+        FlatPackage
+      ) -> (Compile / sourceManaged).value / "scalapb"
+    )
   )
 
 // ==============================

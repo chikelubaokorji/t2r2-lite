@@ -9,10 +9,10 @@ import "TaskSpec.proto";
 option java_multiple_files = true;
 option java_package = "io.t2r2.contracts.v1";
 
-// option (scalapb.options) = {
-//   flat_package: true
-//   preserve_unknown_fields: false
-// };
+option (scalapb.options) = {
+  flat_package: true
+  preserve_unknown_fields: false
+};
 
 // Reference to an input artifact with an optional expected hash
 // for reproducibility guarantees.
