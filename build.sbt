@@ -148,13 +148,8 @@ lazy val contracts = (project in file("modules/contracts"))
     pekkoGrpcGeneratedSources := Seq(PekkoGrpc.Client, PekkoGrpc.Server),
     pekkoGrpcGeneratedLanguages := Seq(PekkoGrpc.Scala),
     // ScalaPB configuration for this project only
-    //Compile / PB.targets := Seq(
-    //  scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
-    //)
     Compile / PB.targets := Seq(
-      scalapb.gen(
-        FlatPackage
-      ) -> (Compile / sourceManaged).value / "scalapb"
+      scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
     )
   )
 

@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package io.t2r2.contracts.v1;
+package contracts;
 
 import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
 import "TaskSpec.proto";
 
 option java_multiple_files = true;
-option java_package = "io.t2r2.contracts.v1";
+option java_package = "contracts";
 
 option (scalapb.options) = {
   flat_package: true

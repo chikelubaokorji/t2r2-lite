@@ -2,7 +2,7 @@
 
 - `Artifact.proto`, `TaskSpec.proto`, and `RunSpec.proto` use forward-compatible field numbering, with comments describing their evolution.
 - `ContractsService.proto` defines service interfaces containing Pekko-native gRPC service defs for ContractsService (ProposeContract, AgreeContract, GetContract, ListContracts).
-- All use namespace defined under io.t2r2.contracts.v1 (i.e. they use packages io.t2r2.contracts.v1)
+- All use namespace defined under contracts (i.e. they use packages contracts)
 
 # Proto File Layout
 ```bash
