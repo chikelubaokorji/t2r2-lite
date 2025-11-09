@@ -290,7 +290,7 @@ Compile / PB.targets := Seq(
 PB.externalIncludePath := (Compile / sourceDirectory).value / "protobuf"
 
 // Recommended to keep proto sources under: modules/{core,contracts}/src/main/protobuf
-// Example: modules/contracts/src/main/protobuf/Artifact.proto
+// Example: modules/contracts/src/main/protobuf/artifact.proto
 
 // ==============================
 // Assembly settings (fat JARs for each service)
