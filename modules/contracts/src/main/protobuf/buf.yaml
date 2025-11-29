@@ -1,0 +1,18 @@
+# Linting and Validation Configuration for .proto Files (essential for enforcing style, structure, and semantic correctness)
+version: v1
+
+lint:
+  use:
+    - DEFAULT
+  except:
+    - FIELD_LOWER_SNAKE_CASE
+    - RPC_REQUEST_RESPONSE_UNIQUE
+
+  ignore:
+    - scalapb/scalapb.proto
+    - target
+    - "**/target/**"
+
+breaking:
+  use:
+    - FILE
