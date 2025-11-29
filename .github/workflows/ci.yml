@@ -60,26 +60,20 @@ jobs:
           version: '1.28.1'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup ScalaPB protos (shared for buf + ScalaPB)
+      - name: Setup ScalaPB protos for buf
         run: |
-          curl -sSL --create-dirs https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
-              -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto | \
-              tee .buf/scalapb/scalapb.proto > /dev/null
-              
-      # - name: Setup ScalaPB protos for buf
-      #   run: |
-      #     mkdir -p modules/contracts/src/main/protobuf/scalapb
-      #     curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
-      #       -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto
+          curl -sSL --create-dirs \
+            https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+            -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto \
 
       - name: Lint proto files with buf
         run: buf lint modules/contracts/src/main/protobuf
 
-      # - name: Download buf dependencies
-      #   run: |
-      #     mkdir -p .buf/scalapb
-      #     curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
-      #       -o .buf/scalapb/scalapb.proto
+      - name: Download buf dependencies
+        run: |
+          curl -sSL --create-dirs \
+            https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+            -o .buf/scalapb/scalapb.proto
 
       - name: Lint with external dependencies
         run: buf lint modules/contracts/src/main/protobuf
