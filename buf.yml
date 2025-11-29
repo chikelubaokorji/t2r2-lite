@@ -12,6 +12,7 @@ lint:
 
   # Exclude target directories and generated files
   ignore:
+    - modules/contracts/src/main/protobuf/scalapb/scalapb.proto
     - modules/*/target
     - target
     - "**/target/**"

@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package contracts;
+package contracts.v1;
 
 import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
-import "v1/task_spec.proto";
+import "contracts/v1/task_spec.proto";
 
 option java_multiple_files = true;
 option java_package = "contracts";

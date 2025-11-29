@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package contracts;
+package contracts.v1;
 
 import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
