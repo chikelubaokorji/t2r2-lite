@@ -33,7 +33,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-          cache: 'sbt'
 
       - name: Setup SBT
         uses: sbt/setup-sbt@v1
@@ -61,23 +60,29 @@ jobs:
           version: '1.28.1'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup ScalaPB protos for buf
+      - name: Setup ScalaPB protos (shared for buf + ScalaPB)
         run: |
-          mkdir -p modules/contracts/src/main/protobuf/scalapb
-          curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
-            -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto
+          curl -sSL --create-dirs https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+              -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto | \
+              tee .buf/scalapb/scalapb.proto > /dev/null
+              
+      # - name: Setup ScalaPB protos for buf
+      #   run: |
+      #     mkdir -p modules/contracts/src/main/protobuf/scalapb
+      #     curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+      #       -o modules/contracts/src/main/protobuf/scalapb/scalapb.proto
 
-      - name: Lint proto files with buf (Stage 1)
+      - name: Lint proto files with buf
         run: buf lint modules/contracts/src/main/protobuf
 
-      - name: Lint proto files with buf (Stage 2)
-        run: |
-          mkdir -p .buf/scalapb
-          curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto -o .buf/scalapb/scalapb.proto
+      # - name: Download buf dependencies
+      #   run: |
+      #     mkdir -p .buf/scalapb
+      #     curl -sSL https://raw.githubusercontent.com/scalapb/ScalaPB/master/protobuf/scalapb/scalapb.proto \
+      #       -o .buf/scalapb/scalapb.proto
 
-      - name: Lint proto files with buf (Stage 3)
-        run: |
-          buf lint modules/contracts/src/main/protobuf --path .buf
+      - name: Lint with external dependencies
+        run: buf lint modules/contracts/src/main/protobuf
 
       - name: Enforce Proto File Evolution Guidelines
         run: |
