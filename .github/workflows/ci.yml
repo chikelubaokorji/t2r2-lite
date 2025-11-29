@@ -78,8 +78,9 @@ jobs:
       - name: Lint with external dependencies
         run: buf lint modules/contracts/src/main/protobuf
 
-      - name: Enforce Proto File Evolution Guidelines
+      - name: Run Proto Evolution Guideline Check
         run: |
+          chmod +x ./scripts/proto_evolution_ci.sh
           if [ -f ./scripts/proto_evolution_ci.sh ]; then
             ./scripts/proto_evolution_ci.sh
           else
