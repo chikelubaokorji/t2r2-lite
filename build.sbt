@@ -146,11 +146,7 @@ lazy val contracts = (project in file("modules/contracts"))
     libraryDependencies ++= protobufDeps ++ pekkoCoreDeps ++ persistenceDeps ++ httpAndGrpcDeps,
     // Configure Pekko gRPC code generation
     pekkoGrpcGeneratedSources := Seq(PekkoGrpc.Client, PekkoGrpc.Server),
-    pekkoGrpcGeneratedLanguages := Seq(PekkoGrpc.Scala),
-    // ScalaPB configuration for this project only
-    Compile / PB.targets := Seq(
-      scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
-    )
+    pekkoGrpcGeneratedLanguages := Seq(PekkoGrpc.Scala)
   )
 
 // ==============================
