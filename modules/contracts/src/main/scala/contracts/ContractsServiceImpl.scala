@@ -1,13 +1,13 @@
 package contracts
 
 import org.apache.pekko.actor.typed.ActorSystem
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContextExecutor}
 import contracts._ 
 import com.google.protobuf.timestamp.Timestamp
 import java.time.Instant
 
 class ContractsServiceImpl(system: ActorSystem[_]) extends ContractsService {
-  private implicit val ec = system.executionContext
+  private implicit val ec: ExecutionContextExecutor = system.executionContext
 
   override def proposeContract(in: ProposeContractRequest): Future[ProposeContractResponse] = {
     val now = Instant.now()
